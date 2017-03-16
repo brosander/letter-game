@@ -29,36 +29,45 @@ class LetterGameMain:
         if chunk:
           f.write(chunk)
 
+  def _blit(self, surface = None, text = None, image = None):
+    if not surface:
+      surface = pygame.Surface((self.width, self.height))
+    surface.fill((0,0,0))
+    if image:
+      new_width = int(float(image.get_width()) / image.get_height() * self.height)
+      surface.blit(pygame.transform.smoothscale(image, (new_width, self.height)), ((self.width - new_width) / 2, 0))
+    if text:
+      orig_text_label = self.font.render(text, 1, (255, 255, 0))
+      new_text_height = int(self.height * 0.15)
+      new_text_width  = min(int((float(orig_text_label.get_width()) / orig_text_label.get_height()) * new_text_height), self.width)
+      text_label = pygame.transform.smoothscale(orig_text_label, (new_text_width, new_text_height))
+      surface.fill((0, 0, 0), pygame.Rect((0, self.height - text_label.get_height()), (self.width, text_label.get_height() + 5)))
+      surface.blit(text_label, ((self.width - text_label.get_width())/2, self.height - text_label.get_height()))
+    return surface
+
   def _build_assets(self):
     assets = {}
-    for f in listdir(self.asset_dir):
-      if f.endswith('.png') or f.endswith('.jpg'):
-        p = join(self.asset_dir, f)
-        if isfile(p):
-          letter = f[0].upper()
-          if letter not in assets:
-            assets[letter] = []
-          original_image = pygame.image.load(p).convert()
-          new_width = int(float(original_image.get_width()) / original_image.get_height() * self.height)
-          image = pygame.Surface((self.width, self.height))
-          image.fill((0, 0, 0))
-          image.blit(pygame.transform.smoothscale(original_image, (new_width, self.height)), ((self.width - new_width) / 2, 0))
-          text_name = f[:-4]
-          text = letter + ' is for ' + text_name
-          tts = join(self.asset_dir, text_name + '.mp3')
-          if not isfile(tts):
-            print('Getting tts for ' + text)
-            self._get_tts(text, tts)
-          if self.render_full:
-            orig_text_label = self.font.render(text, 1, (255, 255, 0))
-          else:
-            orig_text_label = self.font.render(text[0], 1, (255, 255, 0))
-          new_text_height = int(self.height * 0.15)
-          new_text_width  = int((float(orig_text_label.get_width()) / orig_text_label.get_height()) * new_text_height)
-          text_label = pygame.transform.smoothscale(orig_text_label, (new_text_width, new_text_height))
-          image.fill((0, 0, 0), pygame.Rect((0, self.height - text_label.get_height()), (self.width, text_label.get_height() + 5)))
-          image.blit(text_label, ((self.width - text_label.get_width())/2, self.height - text_label.get_height()))
-          assets[letter].append((text, image, tts))
+    for f in sorted([f for f in listdir(self.asset_dir) if f.endswith('.png') or f.endswith('.jpg')]):
+      p = join(self.asset_dir, f)
+      if isfile(p):
+        letter = f[0].upper()
+        if letter not in assets:
+          assets[letter] = []
+        self._blit(self.screen, text = 'Loading ' + f)
+        pygame.display.flip()
+        image = pygame.image.load(p).convert()
+        text_name = f[:-4]
+        text = letter + ' is for ' + text_name
+        image_text = text
+        if not self.render_full:
+          image_text = text[0]
+        tts = join(self.asset_dir, text_name + '.mp3')
+        if not isfile(tts):
+          print('Getting tts for ' + text)
+          self._get_tts(text, tts)
+        assets[letter].append((text, self._blit(text = image_text, image = image), tts))
+    self._blit(self.screen, text = 'Press a letter to start.')
+    pygame.display.flip()
     return assets
 
   def main_loop(self):
