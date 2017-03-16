@@ -25,7 +25,7 @@ A simple game to help small children learn their ABCs
 optional arguments:
   -h, --help            show this help message and exit
   -p PICTUREDIRECTORY, --pictureDirectory PICTUREDIRECTORY
-                        Directory of images to use (default: /home/bryan/Github/letter-game/default)
+                        Directory of images to use (default: LetterGameDirectory/default)
   -t TTSURLPREFIX, --ttsUrlPrefix TTSURLPREFIX
                         Url prefix to append tts query to (default:
                         https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=En-us&q=)
