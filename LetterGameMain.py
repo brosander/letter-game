@@ -10,7 +10,7 @@ import sys
 import urllib
 
 class LetterGameMain:
-  def __init__(self, asset_dir, tts_prefix, render_full = True, width=1024, height=768):
+  def __init__(self, asset_dir, tts_prefix, render_full = True, spell = False, width=1024, height=768):
     pygame.init()
     pygame.mixer.init()
     self.width = width
@@ -19,7 +19,8 @@ class LetterGameMain:
     self.asset_dir = asset_dir
     self.tts_prefix = tts_prefix
     self.font = pygame.font.SysFont("monospace", 48)
-    self.render_full = render_full
+    self.render_full = render_full or spell
+    self.spell = spell
     self.assets = self._build_assets()
 
   def _get_tts(self, text, output_file):
@@ -57,11 +58,16 @@ class LetterGameMain:
         pygame.display.flip()
         image = pygame.image.load(p).convert()
         text_name = f[:-4]
-        text = letter + ' is for ' + text_name
-        image_text = text
+        if self.spell:
+          text_name = text_name.upper()
+          text = ', '.join([char for char in text_name]) + ', ' + text_name
+          image_text = text_name
+        else:
+          text = letter + ' is for ' + text_name
+          image_text = text
         if not self.render_full:
           image_text = text[0]
-        tts = join(self.asset_dir, text_name + '.mp3')
+        tts = join(self.asset_dir, text + '.mp3')
         if not isfile(tts):
           print('Getting tts for ' + text)
           self._get_tts(text, tts)
@@ -100,10 +106,12 @@ if __name__ == "__main__":
 
   parser = argparse.ArgumentParser(description = 'A simple game to help small children learn their ABCs',
     formatter_class=lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=120))
+  parser.add_argument("-f", "--full", action='store_true')
+  parser.add_argument("-s", "--spell", action='store_true')
   parser.add_argument("-p", "--pictureDirectory", help="Directory of images to use", default=os.path.join(os.path.dirname(os.path.realpath(__file__)), 'default'))
   parser.add_argument("-t", "--ttsUrlPrefix", help="Url prefix to append tts query to", default='https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=En-us&q=')
   args = parser.parse_args()
 
-  main = LetterGameMain(args.pictureDirectory, args.ttsUrlPrefix, False)
+  main = LetterGameMain(args.pictureDirectory, args.ttsUrlPrefix, args.full, args.spell)
   main.main_loop()
   pygame.quit()
