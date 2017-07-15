@@ -106,8 +106,8 @@ if __name__ == "__main__":
 
   parser = argparse.ArgumentParser(description = 'A simple game to help small children learn their ABCs',
     formatter_class=lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=120))
-  parser.add_argument("-f", "--full", action='store_true')
-  parser.add_argument("-s", "--spell", action='store_true')
+  parser.add_argument("-f", "--full", help="Render the whole sentence when in single letter mode (no -s flag)", action='store_true')
+  parser.add_argument("-s", "--spell", help="Spell the word", action='store_true')
   parser.add_argument("-p", "--pictureDirectory", help="Directory of images to use", default=os.path.join(os.path.dirname(os.path.realpath(__file__)), 'default'))
   parser.add_argument("-t", "--ttsUrlPrefix", help="Url prefix to append tts query to", default='https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=En-us&q=')
   args = parser.parse_args()

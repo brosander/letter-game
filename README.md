@@ -18,14 +18,16 @@ python LetterGameMain.py
 
 Advanced:
 ```
-python LetterGameMain.py [-h] [-p PICTUREDIRECTORY] [-t TTSURLPREFIX]
+./LetterGame.sh [-h] [-f] [-s] [-p PICTUREDIRECTORY] [-t TTSURLPREFIX]
 
 A simple game to help small children learn their ABCs
 
 optional arguments:
   -h, --help            show this help message and exit
+  -f, --full            Render the whole sentence when in single letter mode (no -s flag) (default: False)
+  -s, --spell           Spell the word (default: False)
   -p PICTUREDIRECTORY, --pictureDirectory PICTUREDIRECTORY
-                        Directory of images to use (default: LetterGameDirectory/default)
+                        Directory of images to use (default: /home/bryan/Github/letter-game/default)
   -t TTSURLPREFIX, --ttsUrlPrefix TTSURLPREFIX
                         Url prefix to append tts query to (default:
                         https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=En-us&q=)
