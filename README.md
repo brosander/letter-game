@@ -5,9 +5,8 @@ This is a simple game written using the pygame framework that is intended to hel
 The images can be customized. (My personal version is mostly family pictures for example.)
 
 Requirements:
-1. [Python 2.7.x](https://www.python.org/downloads/)
-2. [pygame](https://www.pygame.org/news)
-3. Internet Connection (the first time a new picture set is used)
+1. [virtualenv](http://python-guide-pt-br.readthedocs.io/en/latest/dev/virtualenvs/)
+2. Internet Connection (the first time a new picture set is used)
 
 Usage:
 -----------
