@@ -60,7 +60,7 @@ class LetterGameMain:
         text_name = f[:-4]
         if self.spell:
           text_name = text_name.upper()
-          text = ', '.join([char for char in text_name]) + ', ' + text_name
+          text = ', '.join([char for char in text_name if char != ' ']) + ', ' + text_name
           image_text = text_name
         else:
           text = letter + ' is for ' + text_name
